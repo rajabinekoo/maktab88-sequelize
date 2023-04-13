@@ -1,7 +1,6 @@
 const { AppError } = require("../utils/types");
 
 const errorHandler = (err, req, res, next) => {
-  console.log("ok2");
   if (err instanceof AppError) {
     return res
       .status(err.code)

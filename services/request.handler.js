@@ -3,11 +3,11 @@ const { AppError } = require("../utils/types");
 // closure solution
 function requestHandler(controller) {
   return async function (req, res, next) {
-    console.log("ok1");
     try {
       if (!!controller) await controller(req, res, next);
       else next();
     } catch (error) {
+      console.log(error);
       if (error instanceof AppError) {
         return next(error);
       }
