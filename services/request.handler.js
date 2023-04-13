@@ -1,15 +1,32 @@
 const { AppError } = require("../utils/types");
 
-const requestHandler = async function (req, res, next) {
-  try {
-    if (!!this.controller) await this.controller(req, res, next);
-    else next();
-  } catch (error) {
-    if (error instanceof AppError) {
-      return next(error);
+// closure solution
+function requestHandler(controller) {
+  return async function (req, res, next) {
+    console.log("ok1");
+    try {
+      if (!!controller) await controller(req, res, next);
+      else next();
+    } catch (error) {
+      if (error instanceof AppError) {
+        return next(error);
+      }
+      next(new AppError("Something went wrong.", 500));
     }
-    next(new AppError("Something went wrong.", 500));
   }
-};
+}
+
+// bind solution
+// const requestHandler = async function (req, res, next) {
+//   try {
+//     if (!!this.controller) await this.controller(req, res, next);
+//     else next();
+//   } catch (error) {
+//     if (error instanceof AppError) {
+//       return next(error);
+//     }
+//     next(new AppError("Something went wrong.", 500));
+//   }
+// };
 
 module.exports = { requestHandler };

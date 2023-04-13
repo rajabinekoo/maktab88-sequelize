@@ -1,14 +1,24 @@
 const express = require("express");
-// const { Student } = require("../database/models/student");
-// const { AppError } = require("../utils/types");
 const { requestHandler } = require("../services/request.handler");
-const { addStudentController } = require("../controllers/student");
+const {
+  addStudentController,
+  getAllStudents,
+} = require("../controllers/student");
+const { studentValidationSchema } = require("../validations/student");
+const { validator } = require("../services/validator");
+const { paginationSchema } = require("../validations/global");
 const router = express.Router();
 
-router.get("/", function (req, res, next) {
-  res.send({ result: [] });
-});
+router.get(
+  "/",
+  validator(paginationSchema, "query"),
+  requestHandler(getAllStudents)
+);
 
-router.post("/", requestHandler.bind({ controller: addStudentController }));
+router.post(
+  "/",
+  validator(studentValidationSchema, "body"),
+  requestHandler(addStudentController)
+);
 
 module.exports = router;
